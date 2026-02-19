@@ -2,6 +2,8 @@
 #include <zephyr/drivers/i2c.h>
 #include "bme680_driver.h"
 
+
+
 static const struct i2c_dt_spec dev_i2c = {
     .bus = DEVICE_DT_GET(DT_NODELABEL(i2c0)),
     .addr = BME680_I2C_ADDR,
@@ -9,6 +11,9 @@ static const struct i2c_dt_spec dev_i2c = {
 
 int main(void)
 {
+
+
+    
     printk("Starting BME680 Driver...\n");
     if (!device_is_ready(dev_i2c.bus)) return 0;
 
