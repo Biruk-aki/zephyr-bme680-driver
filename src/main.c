@@ -1,45 +1,38 @@
 #include <zephyr/kernel.h>
-#include <zephyr/drivers/i2c.h>
+#include <zephyr/device.h>
 #include "bme680_driver.h"
-
-
-
-static const struct i2c_dt_spec dev_i2c = {
-    .bus = DEVICE_DT_GET(DT_NODELABEL(i2c0)),
-    .addr = BME680_I2C_ADDR,
-};
 
 int main(void)
 {
+    /* 1. Initialize our wrapper struct using the devicetree label */
+    struct bme680_app_device my_sensor = {
+        .dev = DEVICE_DT_GET(DT_NODELABEL(bme680))
+    };
 
-
-    
-    printk("Starting BME680 Driver...\n");
-    if (!device_is_ready(dev_i2c.bus)) return 0;
-
-    /* 1. Initialization Check */
-    if (bme680_read_chip_id(&dev_i2c) != 0) {
-        return 0; // Stop if sensor not found
+    /* 2. Initialize the sensor using our API wrapper function */
+    if (app_bme680_init(&my_sensor) != 0) {
+        printk("Failed to initialize BME680 via Sensor API\n");
+        return 0;
     }
 
-    struct bme680_raw_data raw;
+    printk("BME680 API Driver Started Successfully!\n");
 
     while (1) {
-        /* Step A: Trigger Measurement */
-        bme680_start_measurement(&dev_i2c);
-
-        /* Step B: Wait for it to finish (approx 100ms is safe) */
-        k_msleep(100);
-
-        /* Step C: Read Data */
-        if (bme680_read_raw_data(&dev_i2c, &raw) == 0) {
-            /* Print raw bytes just to prove it's alive! */
-            /* We will turn these into real degrees Celsius later */
-            printk("Raw Data: %02X %02X %02X %02X \n", 
-                   raw.buf[0], raw.buf[1], raw.buf[2], raw.buf[3]);
+        /* 3. Fetch all data (Temp, Press, Hum) in one command */
+        if (app_bme680_fetch_data(&my_sensor) == 0) {
+            
+            /* Print the human-readable values */
+            /* val1 is the integer part, val2 is the micro-decimal part */
+            printk("Temp: %d.%06d C | Press: %d.%06d kPa | Hum: %d.%06d %%\n",
+                   my_sensor.temp.val1, my_sensor.temp.val2,
+                   my_sensor.press.val1, my_sensor.press.val2,
+                   my_sensor.hum.val1, my_sensor.hum.val2);
+        } else {
+            printk("Error: Failed to fetch sensor data\n");
         }
 
-        k_msleep(3000); // Repeat every 3 seconds
+        /* Wait 3 seconds before the next reading */
+        k_msleep(3000);
     }
     return 0;
 }
