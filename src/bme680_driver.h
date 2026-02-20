@@ -9,6 +9,7 @@ struct bme680_app_device {
     struct sensor_value temp;
     struct sensor_value press;
     struct sensor_value hum;
+    struct sensor_value gas;
 };
 
 int app_bme680_init(struct bme680_app_device *app_dev);

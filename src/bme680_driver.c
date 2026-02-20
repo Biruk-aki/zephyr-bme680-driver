@@ -20,6 +20,7 @@ int app_bme680_fetch_data(struct bme680_app_device *app_dev)
     sensor_channel_get(app_dev->dev, SENSOR_CHAN_AMBIENT_TEMP, &app_dev->temp);
     sensor_channel_get(app_dev->dev, SENSOR_CHAN_PRESS, &app_dev->press);
     sensor_channel_get(app_dev->dev, SENSOR_CHAN_HUMIDITY, &app_dev->hum);
+    sensor_channel_get(app_dev->dev, SENSOR_CHAN_GAS_RES, &app_dev->gas);
 
     return 0;
 }

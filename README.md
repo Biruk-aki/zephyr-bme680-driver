@@ -1,29 +1,38 @@
-Custom BME680 Driver for Zephyr RTOS
-Status: ✅ Phase 2: Sensor API Integration Complete
+BME680 Environmental Monitoring & Alert System
+Developed for Raspberry Pi Pico 2 (RP2350) using Zephyr RTOS
+📌 Project Overview
+This project implements a real-time environmental monitoring system using the Bosch BME680 multi-gas sensor. The firmware is built on Zephyr RTOS, utilizing a modular driver architecture to measure Temperature, Pressure, Humidity, and Gas Resistance (IAQ).
 
-This project implements a driver for the Bosch BME680 Environmental Sensor on the Raspberry Pi Pico 2 (RP2350) using Zephyr RTOS. It has evolved from a bare-metal I2C register implementation to a high-level wrapper around the official Zephyr Sensor API.
+A closed-loop logic is implemented to trigger a physical alarm (Passive Buzzer) when environmental thresholds are exceeded, demonstrating the integration of I2C digital sensors and GPIO actuators.
 
-Completed Features
-[x] I2C Bus & Devicetree: Configured via app.overlay for the RP2350.
+🛠 Technical Stack
+Hardware: Raspberry Pi Pico 2 (RP2350 SoC), BME680 (I2C), Maker Pi Pico Baseboard.
 
-[x] Sensor API Wrapper: Abstracted hardware logic into a clean bme680_app_device struct.
+RTOS: Zephyr v4.3.99.
 
-[x] Automated Compensation: Utilizes Zephyr's internal Bosch math for Temperature, Pressure, and Humidity.
+Languages: C17.
 
-[x] Data Fetching: Implemented sensor_sample_fetch for synchronized data retrieval.
+Build System: West / CMake / Ninja.
 
-[x] Formatted Output: Real-time serial logging with floating-point support via PuTTY.
+Communication: I2C (400kHz), UART (115200 baud).
 
-To Do
-[ ] Gas Resistance: Enable the internal heater and parse IAQ (Indoor Air Quality) data.
+🚀 Key Features
+Zephyr Sensor API Integration: Abstracted driver implementation using sensor_sample_fetch and sensor_channel_get for cross-platform portability.
 
-[ ] Interrupt Triggers: Use Zephyr triggers to fetch data only on threshold changes.
+Multi-Channel Sensing: Supports Temperature, Pressure, Humidity, and Gas Resistance (MOX heater management).
 
-[ ] Shell Integration: Add Zephyr Shell commands to query sensor status manually.
+Threshold-Based Alert System: Real-time monitoring with a software-oscillated alarm (500Hz) for passive buzzers.
 
-Project Structure
-src/bme680_driver.c/h: High-level wrapper for the Zephyr Sensor API.
+Devicetree Hardware Description: Hardware-to-Software mapping handled entirely through .overlay files, keeping the application code hardware-independent.
 
-src/main.c: Application logic and data reporting loop.
+📂 Project Structure
+app.overlay: Devicetree definition for I2C nodes and GPIO aliases.
 
-app.overlay: Hardware definition for the I2C bus and sensor node. 
+prj.conf: Kconfig symbols for enabling I2C, GPIO, and Sensor subsystems.
+
+src/bme680_driver.c/h: Driver wrapper for the Bosch BME680.
+
+src/main.c: Application logic and alarm control.
+
+📈 Results
+The system successfully detects Volatile Organic Compounds (VOCs) and temperature spikes. When the temperature exceeds 21°C (or your preferred threshold), the system triggers an audible alert on GP18.

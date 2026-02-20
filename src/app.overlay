@@ -1,11 +1,30 @@
+/ {
+    /* Define a 'leds' node for the buzzer to use the GPIO-LED driver */
+    buzzers {
+        compatible = "gpio-leds";
+        alarm_buzzer: buzzer_0 {
+            gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;
+            label = "Alarm Buzzer";
+        };
+    };
+
+    /* Create an alias so our C code can find it easily */
+    aliases {
+        buzzer = &alarm_buzzer;
+    };
+};
+
+
+
 &i2c0 {
     status = "okay";
     clock-frequency = <I2C_BITRATE_STANDARD>;
 
     bme680: bme680@77 {
-        /* This string must be EXACTLY "bosch,bme680" */
-        compatible = "bosch,bme680"; 
+        compatible = "bosch,bme680";
         reg = <0x77>;
+        /* heater-temp and heater-duration are removed */
+        /* because the Zephyr driver handles them internally */
         status = "okay";
     };
 };
