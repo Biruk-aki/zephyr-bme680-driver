@@ -1,4 +1,5 @@
 BME680 Environmental Monitoring & Alert System
+
 Developed for Raspberry Pi Pico 2 (RP2350) using Zephyr RTOS
 📌 Project Overview
 This project implements a real-time environmental monitoring system using the Bosch BME680 multi-gas sensor. The firmware is built on Zephyr RTOS, utilizing a modular driver architecture to measure Temperature, Pressure, Humidity, and Gas Resistance (IAQ).
