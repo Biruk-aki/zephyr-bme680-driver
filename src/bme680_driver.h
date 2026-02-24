@@ -2,7 +2,7 @@
 #define BME680_DRIVER_H
 
 #include <zephyr/device.h>
-#include <zephyr/drivers/sensor.h>  // <--- This is vital!
+#include <zephyr/drivers/sensor.h>  
 
 struct bme680_app_device {
     const struct device *dev;
