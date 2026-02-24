@@ -1,5 +1,5 @@
-#include "bme680_driver.h"          // <--- This lets the .c see the struct definition
-#include <zephyr/drivers/sensor.h>  // <--- This lets the .c see sensor_sample_fetch
+#include "bme680_driver.h"          // This lets the .c see the struct definition
+#include <zephyr/drivers/sensor.h>  // This lets the .c see sensor_sample_fetch
 #include <zephyr/logging/log.h>
 
 LOG_MODULE_REGISTER(bme680_driver, LOG_LEVEL_INF);
